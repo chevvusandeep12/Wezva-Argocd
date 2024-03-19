@@ -45,7 +45,7 @@ pipeline {
 
           } else {
             echo 'Repo does not exists - Cloning the repo'
-            sh 'git clone -b main https://github.com/chevvusandeep12/Wezva-Argocd.git'
+            sh 'git clone -b main https://github.com/chevvusandeep12/Wezva-Argocd'
           }
         }
       }
@@ -64,7 +64,7 @@ pipeline {
       steps {
         dir("Gitops/jenkins-demo") {
           sh "git config --global user.email 'chevvusandeep12@gmail.com'"
-          sh 'git remote set-url origin http://$GITHUB_TOKEN@github.com/chevvusandeep12/Wezva-Argocd.git'
+          sh 'git remote set-url origin http://$GITHUB_TOKEN@github.com/chevvusandeep12/Wezva-Argocd'
           sh 'git checkout main'
           sh 'git add -A'
           sh 'git commit -am "Updated image version for Build - $VERSION"'
