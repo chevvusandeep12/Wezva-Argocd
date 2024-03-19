@@ -6,7 +6,7 @@ pipeline {
     VERSION = "${env.BUILD_ID}-${env.GIT_COMMIT}"
     IMAGE_REPO = "chevvusandeep"
     ARGOCD_TOKEN = credentials('argocd-token')
-    GITEA_TOKEN = credentials('github-token')
+    GITHUB_TOKEN = credentials('github-token')
   }
   
   stages {
@@ -35,17 +35,17 @@ pipeline {
     stage('Clone/Pull Repo') {
       steps {
         script {
-          if (fileExists('gitops-argocd')) {
+          if (fileExists('Wezva-Argocd')) {
 
             echo 'Cloned repo already exists - Pulling latest changes'
 
-            dir("gitops-argocd") {
+            dir("Wezva-Argocd") {
               sh 'git pull'
             }
 
           } else {
             echo 'Repo does not exists - Cloning the repo'
-            sh 'git clone -b feature-gitea http://139.59.21.103:3000/siddharth/gitops-argocd'
+            sh 'git clone -b main https://github.com/chevvusandeep12/Wezva-Argocd.git'
           }
         }
       }
@@ -53,8 +53,8 @@ pipeline {
     
     stage('Update Manifest') {
       steps {
-        dir("gitops-argocd/jenkins-demo") {
-          sh 'sed -i "s#siddharth67.*#${IMAGE_REPO}/${NAME}:${VERSION}#g" deployment.yaml'
+        dir("Gitops/jenkins-demo") {
+          sh 'sed -i "s#chevvusandeep.*#${IMAGE_REPO}/${NAME}:${VERSION}#g" deployment.yaml'
           sh 'cat deployment.yaml'
         }
       }
@@ -62,21 +62,15 @@ pipeline {
 
     stage('Commit & Push') {
       steps {
-        dir("gitops-argocd/jenkins-demo") {
-          sh "git config --global user.email 'jenkins@ci.com'"
-          sh 'git remote set-url origin http://$GITEA_TOKEN@139.59.21.103:3000/siddharth/gitops-argocd'
-          sh 'git checkout feature-gitea'
+        dir("Gitops/jenkins-demo") {
+          sh "git config --global user.email 'chevvusandeep12@gmail.com'"
+          sh 'git remote set-url origin http://$GITHUB_TOKEN@github.com/chevvusandeep12/Wezva-Argocd.git'
+          sh 'git checkout main'
           sh 'git add -A'
           sh 'git commit -am "Updated image version for Build - $VERSION"'
-          sh 'git push origin feature-gitea'
+          sh 'git push origin main'
         }
       }
     }
-
-    stage('Raise PR') {
-      steps {
-        sh "bash pr.sh"
-      }
-    } 
   }
 }
