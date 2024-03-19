@@ -6,7 +6,7 @@ pipeline {
     VERSION = "${env.BUILD_ID}-${env.GIT_COMMIT}"
     IMAGE_REPO = "chevvusandeep"
     ARGOCD_TOKEN = credentials('argocd-token')
-    GITHUB_TOKEN = credentials('github-token')
+    GITEA_TOKEN = credentials('github-token')
   }
   
   stages {
