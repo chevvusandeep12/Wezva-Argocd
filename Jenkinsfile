@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   environment {
-    NAME = "solar-system"
+    NAME = "solar-system13"
     VERSION = "${env.BUILD_ID}-${env.GIT_COMMIT}"
     IMAGE_REPO = "chevvusandeep"
     ARGOCD_TOKEN = credentials('argocd-token')
